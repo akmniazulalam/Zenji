@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+    --font-anton: 'Anton SC', sans-serif;
+    --font-jetbrains: 'JetBrains Mono', monospace;
+
+    --color-span: #bc0100;
+}
+
+.stack-scroll-section {
+  position: relative;
+  height: 620vh;
+  overflow: clip;
+}
+
+.stack-sticky-viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.stack-stage {
+  position: relative;
+  height: 100%;
+}
+
+.stack-card-motion {
+  position: absolute;
+  top: clamp(1.5rem, 8vh, 5rem);
+  inset-inline: 0;
+  width: min(1000px, 88vw);
+  margin-inline: auto;
+  transform-origin: center top;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+}
+
+.stack-card {
+  position: relative;
+  height: min(800px, 74vh);
+  overflow: hidden;
+  background: #000;
+  border: solid rgba(255, 255, 255, 0.12);
+  border-width: 4px 1px 1px;
+  border-top-color: #bc0100;
+}
+
+@media (max-width: 640px) {
+  .stack-scroll-section {
+    height: 570vh;
+  }
+
+  .stack-card-motion {
+    width: min(1000px, 92vw);
+  }
+
+  .stack-card {
+    height: min(680px, 68vh);
+  }
+}
