@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Link } from "react-router-dom";
+import heroVideo from "/hero.mp4";
 
 const images = [
   {
@@ -101,6 +102,12 @@ const Home = () => {
     offset: ["start start", "end end"],
   });
   return (
+    <>
+    <section>
+        <video autoPlay playsInline muted loop poster="/hero-poster.webp" aria-hidden="true" className="absolute top-0 left-0 h-full w-full object-cover object-center">
+        <source src="/hero.mp4" type="video/mp4" />
+        </video>
+    </section>
     <section>
       <div className="px-6 py-12 flex items-end justify-between gap-6">
         <div className="">
@@ -134,6 +141,7 @@ const Home = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 
