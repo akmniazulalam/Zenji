@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiSearch } from "react-icons/fi";
+import { FaRegHeart } from "react-icons/fa";
+import { GrCart } from "react-icons/gr";
+import { LuUserRound } from "react-icons/lu";
 
 const Header = () => {
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   return (
     <>
       <div className="relative h-10 overflow-hidden bg-span text-white z-40">
@@ -47,6 +52,65 @@ const Header = () => {
               to={"/our-story"}
               className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
               OUR STORY
+            </Link>
+            <div className="relative">
+              <button
+                type="button"
+                aria-expanded="false"
+                aria-haspopup="true"
+                onClick={() => setIsMoreOpen(!isMoreOpen)}
+                className="font-jetbrains text-xs font-bold md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none min-h-10 min-w-10">
+                MORE ∨
+              </button>
+              {isMoreOpen && (
+                <div className="absolute left-0 top-full z-50 min-w-45 border border-black bg-white opacity-100">
+                  <Link
+                    to={"/collaboration"}
+                    className="block px-5 py-3 text-[12px] uppercase font-jetbrains tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
+                    COLLABORATION
+                  </Link>
+                  <Link
+                    to={"/review"}
+                    className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
+                    REVIEW
+                  </Link>
+                  <Link
+                    to={"/faq"}
+                    className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none">
+                    FAQ
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-6 md:gap-2 xl:gap-6">
+            <div className="hidden items-center md:flex">
+              <button
+                type="button"
+                aria-label="Open Search"
+                aria-expanded="false"
+                aria-controls="nav-search-panel"
+                className="flex h-11 w-11 items-center justify-center text-white transition-colors hover:text-span hover:scale-[1.05] cursor-none">
+                <FiSearch className="text-[20px]" />
+              </button>
+            </div>
+            <Link
+              to={"/wishlist"}
+              aria-label="Wishlist"
+              className="relative flex h-11 w-11 items-center justify-center text-white transition-colors hover:text-span hover:scale-[1.05] cursor-none">
+              <FaRegHeart className="text-2xl" />
+            </Link>
+            <button
+              aria-label="Open cart"
+              className="relative flex h-11 w-11 items-center justify-center text-white transition-colors hover:text-span hover:scale-[1.05] cursor-none">
+              <GrCart className="text-2xl" />
+            </button>
+            <Link
+              to={"/login"}
+              aria-label="Account"
+              className="hidden h-11 w-11 items-center justify-center transition-colors hover:text-span md:flex text-white hover:scale-[1.05] cursor-none"
+              aria-current="page">
+              <LuUserRound className="text-2xl" />
             </Link>
           </div>
         </div>
