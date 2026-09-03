@@ -7,6 +7,8 @@ const Cursor = () => {
 
   const [isVisible, setIsVisible] = useState(false);
 
+  const [isHovering, setIsHovering] = useState(false);
+
   useEffect(() => {
     const handleMouseMove = (event) => {
       x.set(event.clientX);
@@ -19,6 +21,23 @@ const Cursor = () => {
       setIsVisible(false);
     };
 
+    const handleMouseOver = (e) => {
+      const target = e.target.closest("a, button, input, textarea, select");
+
+      setIsHovering(!!target);
+    };
+
+    const handleMouseOut = (e) => {
+      const target = e.target.closest("a, button, input, textarea, select");
+
+      if (target && !target.contains(e.relatedTarget)) {
+        setIsHovering(false);
+      }
+    };
+
+    document.addEventListener("mouseover", handleMouseOver);
+    document.addEventListener("mouseout", handleMouseOut);
+
     window.addEventListener("mousemove", handleMouseMove);
     document.documentElement.addEventListener("mouseleave", handleMouseLeave);
 
@@ -28,6 +47,8 @@ const Cursor = () => {
         "mouseleave",
         handleMouseLeave,
       );
+      document.removeEventListener("mouseover", handleMouseOver);
+      document.removeEventListener("mouseout", handleMouseOut);
     };
   }, [x, y]);
 
@@ -41,13 +62,14 @@ const Cursor = () => {
       }}
       animate={{
         opacity: isVisible ? 1 : 0,
+        scale: isHovering ? 1.15 : 1,
       }}
       transition={{
         opacity: {
           duration: 0.2,
         },
       }}
-      className="fixed top-0 left-0 -translate-1/2 pointer-events-none z-50"
+      className="fixed top-0 left-0 translate-[-30%] pointer-events-none transition-opacity duration-150 ease-linear z-50"
     />
   );
 };
