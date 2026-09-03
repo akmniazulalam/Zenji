@@ -2,7 +2,7 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <div>Header</div>
+    <div className="relative h-10 overflow-hidden bg-span text-white"></div>
   )
 }
 
