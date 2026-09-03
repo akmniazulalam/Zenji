@@ -4,6 +4,10 @@
     --font-anton: 'Anton SC', sans-serif;
     --font-jetbrains: 'JetBrains Mono', monospace;
 
+    --spacing-margin-mobile: 1.25rem;
+    --spacing-margin-desktop: 4rem;
+    --spacing-container-max: 90rem;
+
     --color-span: #bc0100;
 }
 
