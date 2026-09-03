@@ -11,6 +11,8 @@ import OurStory from "./pages/OurStory";
 import Collaboration from "./pages/Collaboration";
 import Review from "./pages/Review";
 import Faq from "./pages/Faq";
+import Login from "./pages/Login";
+import Wishlist from "./pages/Wishlist";
 
 function App() {
 
@@ -27,6 +29,8 @@ function App() {
           <Route path="/collaboration" element={<Collaboration />} />
           <Route path="/review" element={<Review />} />
           <Route path="/faq" element={<Faq />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>
