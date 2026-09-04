@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import { GrCart } from "react-icons/gr";
@@ -7,6 +7,33 @@ import { LuUserRound } from "react-icons/lu";
 
 const Header = () => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const location = useLocation();
+  const headerRef = useRef(null);
+
+  const isHomePage = location.pathname === "/";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!headerRef.current) return;
+      
+      if (isHomePage) {
+          if (window.scrollY > 50) {
+            headerRef.current.classList.add("bg-[#000000f2]");
+          } else {
+            headerRef.current.classList.remove("bg-[#000000f2]");
+          }
+        }
+    };
+
+    handleScroll(); // Call it once to set the initial state based on the current scroll position
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isHomePage]);
+
   return (
     <>
       <div className="relative h-10 overflow-hidden bg-span text-white z-40">
@@ -23,7 +50,9 @@ const Header = () => {
           </span>
         </div>
       </div>
-      <nav className="sticky top-0 z-40 w-full bg-transparent [backdrop-filter:none] border-b-0 transition-all duration-300 ease-in-out">
+      <nav
+        ref={headerRef}
+        className={`sticky top-0 z-40 w-full [backdrop-filter:none] border-b-0 ${!isHomePage ? "bg-[#000000f2]" : ""} transition-all duration-300 ease-in-out`}>
         <div className="mx-auto flex w-full max-w-container-max items-center justify-between px-margin-mobile py-4 md:px-margin-desktop">
           <Link
             to={"/"}
@@ -53,34 +82,35 @@ const Header = () => {
               className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
               OUR STORY
             </Link>
-            <div className="relative">
+            <div className="relative" onMouseLeave={() => setIsMoreOpen(false)}>
               <button
                 type="button"
                 aria-expanded="false"
                 aria-haspopup="true"
                 onClick={() => setIsMoreOpen(!isMoreOpen)}
                 className="font-jetbrains text-xs font-bold md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none min-h-10 min-w-10">
-                MORE ∨
+                {isMoreOpen ? "MORE ∧" : "MORE ∨"}
               </button>
-              {isMoreOpen && (
-                <div className="absolute left-0 top-full z-50 min-w-45 border border-black bg-white opacity-100">
-                  <Link
-                    to={"/collaboration"}
-                    className="block px-5 py-3 text-[12px] uppercase font-jetbrains tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
-                    COLLABORATION
-                  </Link>
-                  <Link
-                    to={"/review"}
-                    className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
-                    REVIEW
-                  </Link>
-                  <Link
-                    to={"/faq"}
-                    className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none">
-                    FAQ
-                  </Link>
-                </div>
-              )}
+              {/* {isMoreOpen && ( */}
+              <div
+                className={`absolute left-0 z-50 min-w-45 border border-black bg-white ${isMoreOpen ? "top-full opacity-100 pointer-events-auto" : "top-7 opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out`}>
+                <Link
+                  to={"/collaboration"}
+                  className="block px-5 py-3 text-[12px] uppercase font-jetbrains tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
+                  COLLABORATION
+                </Link>
+                <Link
+                  to={"/review"}
+                  className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
+                  REVIEW
+                </Link>
+                <Link
+                  to={"/faq"}
+                  className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none">
+                  FAQ
+                </Link>
+              </div>
+              {/* )} */}
             </div>
           </div>
           <div className="flex items-center gap-6 md:gap-2 xl:gap-6">
