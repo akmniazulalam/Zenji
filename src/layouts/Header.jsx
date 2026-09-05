@@ -8,6 +8,7 @@ import { LuUserRound } from "react-icons/lu";
 const Header = () => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const headerRef = useRef(null);
   const cartRef = useRef(null);
@@ -68,12 +69,12 @@ const Header = () => {
       </div>
       <nav
         ref={headerRef}
-        className={`sticky top-0 z-40 w-full [backdrop-filter:none] border-b-0 ${!isHomePage ? "bg-[#000000f2]" : ""} transition-all duration-300 ease-in-out`}>
+        className={`sticky top-0 z-40 w-full ${isMobile ? "bg-black/95 [backdrop-filter:blur(20px)]" : ""} ${!isHomePage ? "bg-[#000000f2] [backdrop-filter:blur(10px)]" : ""} transition-all duration-300 ease-in-out`}>
         <div className="mx-auto flex w-full max-w-container-max items-center justify-between px-margin-mobile py-4 md:px-margin-desktop">
           <Link
             to={"/"}
             className="flex min-h-11 items-center gap-4 hover:scale-[1.05] transition-all duration-300 ease-in-out cursor-none">
-            <span className="inline-block select-none uppercase leading-none text-white font-anton text-4xl tracking-[-0.02em] md:text-2xl xl:text-4xl">
+            <span className="inline-block select-none uppercase leading-none text-white font-anton text-4xl tracking-[-0.02em] md:text-2xl xl:text-4xl [clip-path:polygon(0px_14%,9%_0px,100%_0px,100%_86%,91%_100%,0px_100%)]">
               ZENJI
             </span>
           </Link>
@@ -196,8 +197,89 @@ const Header = () => {
               aria-current="page">
               <LuUserRound className="text-2xl" />
             </Link>
+            <button
+              aria-label="Menu"
+              aria-expanded="false"
+              onClick={() => setIsMobile(!isMobile)}
+              className="flex h-11 w-11 items-center justify-center text-white md:hidden"
+              tabIndex="0">
+              {isMobile ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <line x1="4" y1="4" x2="20" y2="20"></line>
+                  <line x1="20" y1="4" x2="4" y2="20"></line>
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+              )}
+            </button>
           </div>
         </div>
+        {isMobile && (
+          <div className="flex flex-col overflow-hidden md:hidden bg-black/95 border-t border-[#ffffff14] h-auto">
+            <Link
+              to={"/drop"}
+              className="block border-b border-b-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white border-t border-t-[#ffffff14] transition-all duration-300 ease-in-out">
+              DROP
+            </Link>
+            <Link
+              to={"/collection"}
+              className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
+              Collection
+            </Link>
+            <Link
+              to={"/lookbook"}
+              className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
+              Lookbook
+            </Link>
+            <Link
+              to={"/our-story"}
+              className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
+              Our Story
+            </Link>
+            <Link
+              to={"/collaboration"}
+              className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
+              Collaboration
+            </Link>
+            <Link
+              to={"/review"}
+              className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
+              Review
+            </Link>
+            <Link
+              to={"/faq"}
+              className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
+              FAQ
+            </Link>
+            <Link
+              to={"/login"}
+              className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
+              Account
+            </Link>
+          </div>
+        )}
       </nav>
     </>
   );
