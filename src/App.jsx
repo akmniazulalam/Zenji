@@ -13,6 +13,10 @@ import Review from "./pages/Review";
 import Faq from "./pages/Faq";
 import Login from "./pages/Login";
 import Wishlist from "./pages/Wishlist";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Terms from "./pages/Terms";
+import ReturnPolicy from "./pages/ReturnPolicy";
+import Contact from "./pages/Contact";
 
 function App() {
 
@@ -31,6 +35,10 @@ function App() {
           <Route path="/faq" element={<Faq />} />
           <Route path="/login" element={<Login />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/return-policy" element={<ReturnPolicy />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>
