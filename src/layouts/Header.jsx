@@ -167,7 +167,7 @@ const Header = () => {
                   aria-label="Close cart"
                   onClick={() => setIsCartOpen(false)}
                   className="transition-colors duration-150 hover:border-white/50 hover:text-white text-[#6b7280] disabled:opacity-30 w-10 h-10 flex items-center justify-center text-[22px] shrink-0 p-0 bg-transparent border border-white/25 cursor-none"
-                  tabindex="0">
+                  tabIndex="0">
                   ×
                 </button>
               </div>
