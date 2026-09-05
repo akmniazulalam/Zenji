@@ -3,6 +3,7 @@
 @theme {
     --font-anton: 'Anton SC', sans-serif;
     --font-jetbrains: 'JetBrains Mono', monospace;
+    --font-ibm: 'IBM Plex Mono', monospace;
 
     --spacing-margin-mobile: 1.25rem;
     --spacing-margin-desktop: 4rem;
