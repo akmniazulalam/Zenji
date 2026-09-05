@@ -7,22 +7,24 @@ import { LuUserRound } from "react-icons/lu";
 
 const Header = () => {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const location = useLocation();
   const headerRef = useRef(null);
+  const cartRef = useRef(null);
 
   const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
       if (!headerRef.current) return;
-      
+
       if (isHomePage) {
-          if (window.scrollY > 50) {
-            headerRef.current.classList.add("bg-[#000000f2]");
-          } else {
-            headerRef.current.classList.remove("bg-[#000000f2]");
-          }
+        if (window.scrollY > 50) {
+          headerRef.current.classList.add("bg-[#000000f2]");
+        } else {
+          headerRef.current.classList.remove("bg-[#000000f2]");
         }
+      }
     };
 
     handleScroll(); // Call it once to set the initial state based on the current scroll position
@@ -33,6 +35,20 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [isHomePage]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (cartRef.current && !cartRef.current.contains(event.target)) {
+        setIsCartOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [cartRef]);
 
   return (
     <>
@@ -91,7 +107,6 @@ const Header = () => {
                 className="font-jetbrains text-xs font-bold md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none min-h-10 min-w-10">
                 {isMoreOpen ? "MORE ∧" : "MORE ∨"}
               </button>
-              {/* {isMoreOpen && ( */}
               <div
                 className={`absolute left-0 z-50 min-w-45 border border-black bg-white ${isMoreOpen ? "top-full opacity-100 pointer-events-auto" : "top-7 opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out`}>
                 <Link
@@ -110,7 +125,6 @@ const Header = () => {
                   FAQ
                 </Link>
               </div>
-              {/* )} */}
             </div>
           </div>
           <div className="flex items-center gap-6 md:gap-2 xl:gap-6">
@@ -132,9 +146,49 @@ const Header = () => {
             </Link>
             <button
               aria-label="Open cart"
+              onClick={() => setIsCartOpen(!isCartOpen)}
               className="relative flex h-11 w-11 items-center justify-center text-white transition-colors hover:text-span hover:scale-[1.05] cursor-none">
               <GrCart className="text-2xl" />
             </button>
+            <aside
+              role="dialog"
+              aria-modal="true"
+              aria-label="Your cart"
+              ref={cartRef}
+              className={`fixed top-0 ${isCartOpen ? "right-0 opacity-100" : "-right-full opacity-0"} z-40 flex h-full w-full flex-col border-l border-white/10 bg-black md:w-105 transition-all duration-400 ease-in-out`}>
+              <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-xl uppercase tracking-widest text-white font-anton">
+                    YOUR CART
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  aria-label="Close cart"
+                  onClick={() => setIsCartOpen(false)}
+                  className="transition-colors duration-150 hover:border-white/50 hover:text-white text-[#6b7280] disabled:opacity-30 w-10 h-10 flex items-center justify-center text-[22px] shrink-0 p-0 bg-transparent border border-white/25 cursor-none"
+                  tabindex="0">
+                  ×
+                </button>
+              </div>
+              <div
+                data-lenis-prevent="true"
+                className="scrollbar-none grow overflow-y-auto px-6 py-5">
+                <div className="flex h-full flex-col items-center justify-center text-center">
+                  <p className="text-xl uppercase tracking-widest text-white font-anton">
+                    YOUR CART IS EMPTY
+                  </p>
+                  <p className="mt-2 text-xs tracking-[0.3em] font-jetbrains text-span">
+                    THE ARC AWAITS.
+                  </p>
+                  <Link
+                    to={"/collection"}
+                    className="mt-8 inline-flex min-h-11 items-center px-6 py-3 text-sm uppercase tracking-widest text-white font-anton bg-span transition-colors hover:bg-[#930100]! cursor-none">
+                    SHOP COLLECTION →
+                  </Link>
+                </div>
+              </div>
+            </aside>
             <Link
               to={"/login"}
               aria-label="Account"
