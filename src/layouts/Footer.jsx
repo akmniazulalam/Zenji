@@ -13,7 +13,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[30%_1fr] md:gap-16">
           <div>
             <img
-              src="/public/wm_logo.webp"
+              src="/wm_logo.webp"
               alt="ZENJI anime streetwear brand logo"
               className="h-20 w-20"
             />
