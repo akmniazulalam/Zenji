@@ -69,7 +69,7 @@ const Cursor = () => {
           duration: 0.2,
         },
       }}
-      className="fixed top-0 left-0 translate-[-30%] pointer-events-none transition-opacity duration-150 ease-linear z-50"
+      className="hidden md:block fixed top-0 left-0 translate-[-30%] pointer-events-none transition-opacity duration-150 ease-linear z-50"
     />
   );
 };
