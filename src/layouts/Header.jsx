@@ -261,41 +261,49 @@ const Header = () => {
           <div className="flex flex-col overflow-hidden md:hidden bg-black/95 border-t border-[#ffffff14] h-auto">
             <Link
               to={"/drop"}
+              onClick={() => setIsMobile(false)}
               className="block border-b border-b-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white border-t border-t-[#ffffff14] transition-all duration-300 ease-in-out">
               DROP
             </Link>
             <Link
               to={"/collection"}
+              onClick={() => setIsMobile(false)}
               className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
               Collection
             </Link>
             <Link
               to={"/lookbook"}
+              onClick={() => setIsMobile(false)}
               className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
               Lookbook
             </Link>
             <Link
               to={"/our-story"}
+              onClick={() => setIsMobile(false)}
               className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
               Our Story
             </Link>
             <Link
               to={"/collaboration"}
+              onClick={() => setIsMobile(false)}
               className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
               Collaboration
             </Link>
             <Link
               to={"/review"}
+              onClick={() => setIsMobile(false)}
               className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
               Review
             </Link>
             <Link
               to={"/faq"}
+              onClick={() => setIsMobile(false)}
               className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
               FAQ
             </Link>
             <Link
               to={"/login"}
+              onClick={() => setIsMobile(false)}
               className="block border-b border-white/10 px-margin-mobile py-4 font-jetbrains text-xs font-bold leading-4 tracking-widest text-white transition-all duration-300 ease-in-out">
               Account
             </Link>
