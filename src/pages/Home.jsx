@@ -201,6 +201,20 @@ const HeroFrameAnimation = ({ scrollYProgress, reducedMotion }) => {
   );
 };
 
+const HeroBackgroundWord = ({ scrollYProgress, reducedMotion }) => {
+  const scale = useTransform(scrollYProgress, [0, 1], [0.7, 1.1]);
+
+  return (
+    <div aria-hidden="true" className="hero-background-word-wrap">
+      <motion.span
+        className="hero-background-word"
+        style={reducedMotion ? undefined : { scale }}>
+        ZENJI
+      </motion.span>
+    </div>
+  );
+};
+
 const HeroContent = ({ scrollYProgress, reducedMotion }) => {
   const textOpacity = useTransform(
     scrollYProgress,
@@ -212,11 +226,15 @@ const HeroContent = ({ scrollYProgress, reducedMotion }) => {
     [0, 0.7, 0.9],
     ["0vh", "0vh", "-8vh"],
   );
-  const ctaOpacity = useTransform(scrollYProgress, [0.9, 0.94, 1], [0, 1, 1]);
+  const ctaOpacity = useTransform(
+    scrollYProgress,
+    [0.9, 0.925, 0.96, 1],
+    [0, 1, 1, 0],
+  );
   const ctaY = useTransform(
     scrollYProgress,
-    [0.9, 0.94, 1],
-    ["2vh", "0vh", "-6vh"],
+    [0.9, 0.925, 0.96, 1],
+    ["2vh", "0vh", "0vh", "-6vh"],
   );
 
   const [dots, setDots] = useState("");
@@ -278,6 +296,10 @@ const HeroSection = () => {
   return (
     <section ref={heroRef} className="hero-scroll-section">
       <div className="hero-sticky-viewport">
+        <HeroBackgroundWord
+          scrollYProgress={heroProgress}
+          reducedMotion={reducedMotion}
+        />
         <HeroFrameAnimation
           scrollYProgress={heroProgress}
           reducedMotion={reducedMotion}
