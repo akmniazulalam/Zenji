@@ -27,7 +27,9 @@
 html {
   scroll-behavior: smooth;
 }
-
+html body #root {
+  overflow-x: hidden;
+}
 .h-anim {
   animation: loading-pulse 1.5s ease-in-out infinite;
 }
@@ -203,16 +205,16 @@ html {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.sr-only{
+.sr-only {
   position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 @media (max-width: 640px) {
