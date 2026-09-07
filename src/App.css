@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-    --font-anton: 'Anton SC', sans-serif;
-    --font-jetbrains: 'JetBrains Mono', monospace;
-    --font-ibm: 'IBM Plex Mono', monospace;
+  --font-anton: "Anton SC", sans-serif;
+  --font-jetbrains: "JetBrains Mono", monospace;
+  --font-ibm: "IBM Plex Mono", monospace;
 
-    --spacing-margin-mobile: 1.25rem;
-    --spacing-margin-desktop: 4rem;
-    --spacing-container-max: 90rem;
+  --spacing-margin-mobile: 1.25rem;
+  --spacing-margin-desktop: 4rem;
+  --spacing-container-max: 90rem;
 
-    --color-span: #bc0100;
+  --color-span: #bc0100;
 }
 
 @keyframes loading-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
@@ -23,11 +24,11 @@
   }
 }
 
-html{
+html {
   scroll-behavior: smooth;
 }
 
-.h-anim{
+.h-anim {
   animation: loading-pulse 1.5s ease-in-out infinite;
 }
 .hero-scroll-section {
@@ -44,7 +45,8 @@ html{
   height: 100vh;
   height: 100svh;
   overflow: hidden;
-  background: #CFC8C5 url("https://zenji.shop/hero-stage/plate.webp") 50%/cover no-repeat;
+  background: #cfc8c5 url("https://zenji.shop/hero-stage/plate.webp") 50% /
+    cover no-repeat;
 }
 
 .hero-frame-poster,
@@ -69,7 +71,7 @@ html{
 
 .hero-background-word {
   display: block;
-  color: #C9C9C9;
+  color: #c9c9c9;
   font-family: var(--font-anton);
   font-size: clamp(10rem, 34vw, 42rem);
   line-height: 0.8;
@@ -129,7 +131,9 @@ html{
   font-size: 0.75rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: color 180ms ease, border-color 180ms ease;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
 }
 
 .hero-cta:hover {
@@ -138,14 +142,14 @@ html{
 }
 
 .revealText {
-      font-size: clamp(80px, 22vw, 320px);
-    line-height: 0.82;
-    letter-spacing: -0.02em;
-    color: rgb(255, 255, 255);
-    text-transform: uppercase;
-    white-space: nowrap;
-    display: block;
-    transform: none;
+  font-size: clamp(80px, 22vw, 320px);
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  color: rgb(255, 255, 255);
+  text-transform: uppercase;
+  white-space: nowrap;
+  display: block;
+  transform: none;
 }
 
 .stack-scroll-section {
@@ -187,6 +191,28 @@ html{
   border: solid rgba(255, 255, 255, 0.12);
   border-width: 4px 1px 1px;
   border-top-color: #bc0100;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.sr-only{
+  position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }
 
 @media (max-width: 640px) {
