@@ -34,7 +34,7 @@ const MainLayout = () => {
     <>
       <Header />
       {isPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center p-4 sm:p-6 bg-[#000000b3] opacity-100 z-40">
+        <div className="hidden fixed inset-0 md:flex items-center justify-center p-4 sm:p-6 bg-[#000000b3] opacity-100 z-40">
           <div
             ref={popupRef}
             role="dialog"
