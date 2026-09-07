@@ -747,7 +747,7 @@ const Home = () => {
               <div
                 key={index}
                 className="w-[82vw] flex-none snap-start sm:w-[46vw] md:w-[calc(33.333%-1rem)] lg:w-[calc(25%-1.125rem)]">
-                <div className="flex flex-col overflow-hidden border border-deep-black bg-stark-white">
+                <div className="flex flex-col overflow-hidden border border-black bg-white">
                   <Link
                     to={"/drop/blue-flame-tee"}
                     className="group flex aspect-2/3 cursor-none flex-col overflow-hidden sm:aspect-3/4">
