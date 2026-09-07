@@ -10,6 +10,16 @@ const getFrameUrl = (index) =>
 const clamp = (value, minimum, maximum) =>
   Math.min(Math.max(value, minimum), maximum);
 
+// Preserve the established start and middle pacing, then allocate the added
+// section length to the final 20% of frames. Both ends remain exact, so
+// reverse scrolling follows the same frames in reverse order.
+const getFrameProgress = (progress) => {
+  return clamp(progress, 0, 1);
+};
+
+const getFrameIndex = (progress) =>
+  Math.round(getFrameProgress(progress) * (FRAME_COUNT - 1));
+
 const usePrefersReducedMotion = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
     typeof window !== "undefined"
@@ -152,12 +162,12 @@ const HeroFrameAnimation = ({ scrollYProgress, reducedMotion }) => {
     const unsubscribe = scrollYProgress.on("change", (progress) => {
       if (reducedMotion) return;
 
-      scheduleRender(Math.round(clamp(progress, 0, 1) * (FRAME_COUNT - 1)));
+      scheduleRender(getFrameIndex(progress));
     });
 
     const initialFrame = reducedMotion
       ? 0
-      : Math.round(clamp(scrollYProgress.get(), 0, 1) * (FRAME_COUNT - 1));
+      : getFrameIndex(scrollYProgress.get());
     scheduleRender(initialFrame);
     void preloadFrames();
 
@@ -171,6 +181,7 @@ const HeroFrameAnimation = ({ scrollYProgress, reducedMotion }) => {
       framesRef.current = [];
     };
   }, [reducedMotion, scrollYProgress]);
+  const frameOpacity = useTransform(scrollYProgress, [0, 0.97, 1], [1, 1, 0]);
 
   return (
     <>
@@ -182,8 +193,8 @@ const HeroFrameAnimation = ({ scrollYProgress, reducedMotion }) => {
         style={{
           opacity: useTransform(
             scrollYProgress,
-            [0, 0.7, 0.9, 0.94, 1],
-            [0, 0, 0, 0, 0],
+            [0, 0.4, 0.45, 0.5, 0.6, 0.65, 0.75, 0.85, 0.9, 0.94, 0.97, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           ),
         }}
         fetchPriority="high"
@@ -192,9 +203,12 @@ const HeroFrameAnimation = ({ scrollYProgress, reducedMotion }) => {
           event.currentTarget.src = "/hero-poster.webp";
         }}
       />
-      <canvas
+      <motion.canvas
         ref={canvasRef}
         aria-hidden="true"
+        style={{
+          opacity: reducedMotion ? 1 : frameOpacity,
+        }}
         className="hero-frame-canvas"
       />
     </>
@@ -204,11 +218,13 @@ const HeroFrameAnimation = ({ scrollYProgress, reducedMotion }) => {
 const HeroBackgroundWord = ({ scrollYProgress, reducedMotion }) => {
   const scale = useTransform(scrollYProgress, [0, 1], [0.7, 1.1]);
 
+  const frameOpacity = useTransform(scrollYProgress, [0, 0.97, 1], [1, 1, 0]);
+
   return (
     <div aria-hidden="true" className="hero-background-word-wrap">
       <motion.span
         className="hero-background-word"
-        style={reducedMotion ? undefined : { scale }}>
+        style={reducedMotion ? undefined : { scale, opacity: frameOpacity }}>
         ZENJI
       </motion.span>
     </div>
@@ -218,23 +234,26 @@ const HeroBackgroundWord = ({ scrollYProgress, reducedMotion }) => {
 const HeroContent = ({ scrollYProgress, reducedMotion }) => {
   const textOpacity = useTransform(
     scrollYProgress,
-    [0, 0.7, 0.9, 0.94, 1],
-    [1, 1, 0, 0, 0],
+    [0, 0.4, 0.45, 0.5, 0.55, 0.6, 1],
+    [1, 1, 0.8, 0.5, 0.2, 0, 0],
   );
+
   const textY = useTransform(
     scrollYProgress,
-    [0, 0.7, 0.9],
-    ["0vh", "0vh", "-8vh"],
+    [0, 0.4, 0.45, 0.5, 0.55, 1],
+    ["0vh", "-1vh", "-2vh", "-4vh", "-6vh", "-8vh"],
   );
+
   const ctaOpacity = useTransform(
     scrollYProgress,
-    [0.9, 0.925, 0.96, 1],
-    [0, 1, 1, 0],
+    [0.65, 0.7, 0.8, 0.86, 0.92, 0.97, 1],
+    [0, 1, 1, 1, 1, 1, 0],
   );
+
   const ctaY = useTransform(
     scrollYProgress,
-    [0.9, 0.925, 0.96, 1],
-    ["2vh", "0vh", "0vh", "-6vh"],
+    [0.65, 0.7, 0.8, 0.86, 0.92, 0.97, 1],
+    ["6vh", "3vh", "0vh", "0vh", "0vh", "0vh", "-4vh"],
   );
 
   const [dots, setDots] = useState("");
