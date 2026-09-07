@@ -137,6 +137,17 @@ html{
   color: var(--color-span);
 }
 
+.revealText {
+      font-size: clamp(80px, 22vw, 320px);
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+    color: rgb(255, 255, 255);
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: block;
+    transform: none;
+}
+
 .stack-scroll-section {
   position: relative;
   height: 620vh;
