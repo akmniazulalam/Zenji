@@ -81,22 +81,22 @@ const Header = () => {
           <div className="hidden items-center gap-4 md:flex xl:gap-10">
             <Link
               to={"/drop"}
-              className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
+              className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
               DROP
             </Link>
             <Link
               to={"/collection"}
-              className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
+              className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
               COLLECTION
             </Link>
             <Link
               to={"/lookbook"}
-              className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
+              className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
               LOOKBOOK
             </Link>
             <Link
               to={"/our-story"}
-              className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
+              className="font-jetbrains font-bold text-xs md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none">
               OUR STORY
             </Link>
             <div className="relative" onMouseLeave={() => setIsMoreOpen(false)}>
@@ -105,24 +105,24 @@ const Header = () => {
                 aria-expanded="false"
                 aria-haspopup="true"
                 onClick={() => setIsMoreOpen(!isMoreOpen)}
-                className="font-jetbrains text-xs font-bold md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none min-h-10 min-w-10">
+                className="font-jetbrains text-xs font-bold md:tracking-[0.04em] xl:tracking-widest text-white opacity-80 hover:opacity-100 hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-none min-h-10 min-w-10">
                 {isMoreOpen ? "MORE ∧" : "MORE ∨"}
               </button>
               <div
                 className={`absolute left-0 z-50 min-w-45 border border-black bg-white ${isMoreOpen ? "top-full opacity-100 pointer-events-auto" : "top-7 opacity-0 pointer-events-none"} transition-all duration-300 ease-in-out`}>
                 <Link
                   to={"/collaboration"}
-                  className="block px-5 py-3 text-[12px] uppercase font-jetbrains tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
+                  className="block px-5 py-3 text-[12px] uppercase font-jetbrains tracking-widest text-black hover:bg-black hover:text-white transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
                   COLLABORATION
                 </Link>
                 <Link
                   to={"/review"}
-                  className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
+                  className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white transition-all duration-300 ease-in-out cursor-none border-b border-black/10">
                   REVIEW
                 </Link>
                 <Link
                   to={"/faq"}
-                  className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white hover:[text-shadow:0_0_8px_#fff,0_0_16px_#fff,0_0_30px_hsla(0,0%,100%,.8)] transition-all duration-300 ease-in-out cursor-none">
+                  className="block px-5 py-3 text-[12px] font-jetbrains uppercase tracking-widest text-black hover:bg-black hover:text-white transition-all duration-300 ease-in-out cursor-none">
                   FAQ
                 </Link>
               </div>
