@@ -686,7 +686,7 @@ const Home = () => {
         </div>
       </section>
       <section>
-        <div className="px-6 py-12 flex items-end justify-between gap-6">
+        <div className="px-6 py-12 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
           <div className="">
             <span className="block text-xs text-span font-jetbrains uppercase tracking-widest">
               COLLECTION // THE_ORIGIN_DROP
@@ -719,7 +719,7 @@ const Home = () => {
         </div>
       </section>
       <section className="overflow-hidden bg-white py-24">
-        <div className="flex items-end justify-between gap-6 bg-white px-6 py-12">
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 bg-white px-6 py-12">
           <div className="">
             <span className="block text-xs uppercase tracking-widest font-jetbrains text-span">
               COLLECTION // THE_ORIGIN_DROP
