@@ -178,7 +178,7 @@ const Header = () => {
                 role="dialog"
                 aria-modal="true"
                 aria-label="Your cart"
-                className={`absolute inset-y-0 right-0 flex h-full w-full flex-col border-l border-white/10 bg-black transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1) md:w-105${isCartOpen ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"}`}>
+                className={`absolute inset-y-0 right-0 flex h-full w-full flex-col border-l border-white/10 bg-black transition-[translate,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:w-105 ${isCartOpen ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"}`}>
                 <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
                   <div className="flex items-center gap-3">
                     <h2 className="text-xl uppercase tracking-widest text-white font-anton">
