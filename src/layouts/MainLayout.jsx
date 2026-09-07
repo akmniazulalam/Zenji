@@ -8,6 +8,7 @@ const MainLayout = () => {
   const popupRef = useRef(null);
   const location = useLocation();
   const pageChanged = location.pathname;
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -92,7 +93,7 @@ const MainLayout = () => {
           </div>
         </div>
       )}
-      <main>
+      <main className={isHomePage ? "-mt-[76px]" : ""}>
         <Outlet />
       </main>
       <Footer />
