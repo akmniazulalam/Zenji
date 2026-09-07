@@ -2,6 +2,296 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Link } from "react-router-dom";
 
+const FRAME_COUNT = 150;
+const PRELOAD_CONCURRENCY = 4;
+const getFrameUrl = (index) =>
+  `https://zenji.shop/hero-stage/frames/f-${String(index).padStart(3, "0")}.webp`;
+
+const clamp = (value, minimum, maximum) =>
+  Math.min(Math.max(value, minimum), maximum);
+
+const usePrefersReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : false,
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
+
+    updatePreference();
+    mediaQuery.addEventListener("change", updatePreference);
+
+    return () => mediaQuery.removeEventListener("change", updatePreference);
+  }, []);
+
+  return prefersReducedMotion;
+};
+
+const HeroFrameAnimation = ({ scrollYProgress, reducedMotion }) => {
+  const canvasRef = useRef(null);
+  const framesRef = useRef([]);
+  const currentFrameRef = useRef(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext("2d");
+
+    if (!canvas || !context) return undefined;
+
+    let animationFrameId = null;
+    let isCancelled = false;
+    const frames = new Array(FRAME_COUNT);
+    framesRef.current = frames;
+
+    const getClosestLoadedFrame = (targetIndex) => {
+      if (frames[targetIndex]) return frames[targetIndex];
+
+      for (let distance = 1; distance < FRAME_COUNT; distance += 1) {
+        if (frames[targetIndex - distance])
+          return frames[targetIndex - distance];
+        if (frames[targetIndex + distance])
+          return frames[targetIndex + distance];
+      }
+
+      return null;
+    };
+
+    const drawFrame = (frameIndex) => {
+      const frame = getClosestLoadedFrame(frameIndex);
+      const bounds = canvas.getBoundingClientRect();
+
+      if (!frame || !bounds.width || !bounds.height) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const canvasWidth = Math.round(bounds.width * dpr);
+      const canvasHeight = Math.round(bounds.height * dpr);
+
+      if (canvas.width !== canvasWidth || canvas.height !== canvasHeight) {
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+      }
+
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      context.clearRect(0, 0, bounds.width, bounds.height);
+
+      const containScale = Math.min(
+        bounds.width / frame.naturalWidth,
+        bounds.height / frame.naturalHeight,
+      );
+      const drawWidth = frame.naturalWidth * containScale;
+      const drawHeight = frame.naturalHeight * containScale;
+
+      context.drawImage(
+        frame,
+        (bounds.width - drawWidth) / 2,
+        (bounds.height - drawHeight) / 2,
+        drawWidth,
+        drawHeight,
+      );
+    };
+
+    const scheduleRender = (frameIndex) => {
+      currentFrameRef.current = frameIndex;
+
+      if (animationFrameId !== null) return;
+
+      animationFrameId = window.requestAnimationFrame(() => {
+        animationFrameId = null;
+        drawFrame(currentFrameRef.current);
+      });
+    };
+
+    // zenji.shop does not send Access-Control-Allow-Origin for these frames.
+    // We only paint the images (never read canvas pixels), so no crossOrigin
+    // attribute is set; the rendered canvas cannot be exported as an image.
+    const loadFrame = (index) =>
+      new Promise((resolve) => {
+        const frame = new Image();
+        frame.decoding = "async";
+        frame.onload = () => {
+          if (!isCancelled) {
+            frames[index] = frame;
+            if (index === 0 || index === currentFrameRef.current) {
+              scheduleRender(currentFrameRef.current);
+            }
+          }
+          resolve();
+        };
+        frame.onerror = () => resolve();
+        frame.src = getFrameUrl(index);
+      });
+
+    const preloadFrames = async () => {
+      await loadFrame(0);
+      if (reducedMotion || isCancelled) return;
+      let nextFrame = 1;
+
+      const worker = async () => {
+        while (!isCancelled) {
+          const frameIndex = nextFrame;
+          nextFrame += 1;
+
+          if (frameIndex >= FRAME_COUNT) return;
+          await loadFrame(frameIndex);
+        }
+      };
+
+      await Promise.all(
+        Array.from({ length: PRELOAD_CONCURRENCY }, () => worker()),
+      );
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      scheduleRender(currentFrameRef.current);
+    });
+    resizeObserver.observe(canvas);
+
+    const unsubscribe = scrollYProgress.on("change", (progress) => {
+      if (reducedMotion) return;
+
+      scheduleRender(Math.round(clamp(progress, 0, 1) * (FRAME_COUNT - 1)));
+    });
+
+    const initialFrame = reducedMotion
+      ? 0
+      : Math.round(clamp(scrollYProgress.get(), 0, 1) * (FRAME_COUNT - 1));
+    scheduleRender(initialFrame);
+    void preloadFrames();
+
+    return () => {
+      isCancelled = true;
+      unsubscribe();
+      resizeObserver.disconnect();
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+      framesRef.current = [];
+    };
+  }, [reducedMotion, scrollYProgress]);
+
+  return (
+    <>
+      <motion.img
+        src={getFrameUrl(0)}
+        alt=""
+        aria-hidden="true"
+        className="hero-frame-poster"
+        style={{
+          opacity: useTransform(
+            scrollYProgress,
+            [0, 0.7, 0.9, 0.94, 1],
+            [0, 0, 0, 0, 0],
+          ),
+        }}
+        fetchPriority="high"
+        onError={(event) => {
+          event.currentTarget.onerror = null;
+          event.currentTarget.src = "/hero-poster.webp";
+        }}
+      />
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="hero-frame-canvas"
+      />
+    </>
+  );
+};
+
+const HeroContent = ({ scrollYProgress, reducedMotion }) => {
+  const textOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.7, 0.9, 0.94, 1],
+    [1, 1, 0, 0, 0],
+  );
+  const textY = useTransform(
+    scrollYProgress,
+    [0, 0.7, 0.9],
+    ["0vh", "0vh", "-8vh"],
+  );
+  const ctaOpacity = useTransform(scrollYProgress, [0.9, 0.94, 1], [0, 1, 1]);
+  const ctaY = useTransform(
+    scrollYProgress,
+    [0.9, 0.94, 1],
+    ["2vh", "0vh", "-6vh"],
+  );
+
+  const [dots, setDots] = useState("");
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prev) => (prev.length >= 3 ? "" : prev + "."));
+    }, 400);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="hero-content">
+      <motion.div
+        style={reducedMotion ? undefined : { opacity: textOpacity, y: textY }}>
+        <div className="mb-4 flex items-center gap-3">
+          <span className="h-2 w-2 rounded-full bg-span h-anim"></span>
+          <span className="block text-[11px] uppercase tracking-[0.3em] text-span font-jetbrains">
+            THE_ORIGIN_DROP{" "}
+            <span className="text-span">
+              // LOADING<span>{dots}</span>
+            </span>
+          </span>
+        </div>
+        <h1 className="hero-heading text-[80px] text-black">
+          WEAR YOUR <span>STORY</span>
+        </h1>
+        <div className="hero-buttons mt-8">
+          <Link
+            to={"/drop"}
+            class="inline-block w-auto rounded-none bg-span px-8 py-4 text-base uppercase text-white transition-all duration-300 hover:bg-white hover:text-black hover:scale-[1.05] font-anton cursor-none"
+            tabIndex="0">
+            SHOP THE DROP →
+          </Link>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="mt-8"
+        style={reducedMotion ? undefined : { opacity: ctaOpacity, y: ctaY }}>
+        <Link
+          to="/drop"
+          className="inline-block w-auto rounded-none bg-black px-8 py-4 text-[16px] uppercase text-white transition-all duration-300 hover:bg-span hover:scale-[1.05] font-anton cursor-none">
+          SHOP THE DROP <span aria-hidden="true">&rarr;</span>
+        </Link>
+      </motion.div>
+    </div>
+  );
+};
+
+const HeroSection = () => {
+  const heroRef = useRef(null);
+  const reducedMotion = usePrefersReducedMotion();
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end end"],
+  });
+
+  return (
+    <section ref={heroRef} className="hero-scroll-section">
+      <div className="hero-sticky-viewport">
+        <HeroFrameAnimation
+          scrollYProgress={heroProgress}
+          reducedMotion={reducedMotion}
+        />
+        <div aria-hidden="true" className="hero-overlay" />
+        <HeroContent
+          scrollYProgress={heroProgress}
+          reducedMotion={reducedMotion}
+        />
+      </div>
+    </section>
+  );
+};
+
 const images = [
   {
     src: "/Warrior-spirit-5.avif",
@@ -220,18 +510,7 @@ const Home = () => {
   });
   return (
     <>
-      <section>
-        <video
-          autoPlay
-          playsInline
-          muted
-          loop
-          poster="/hero-poster.webp"
-          aria-hidden="true"
-          className="absolute top-0 left-0 h-full w-full object-cover object-center">
-          <source src="/hero.mp4" type="video/mp4" />
-        </video>
-      </section>
+      <HeroSection />
       <section>
         <div className="px-6 py-12 flex items-end justify-between gap-6">
           <div className="">
@@ -376,14 +655,14 @@ const Home = () => {
         <div className="bg-linear-90 from-0% via-50% to-100% from-black/58 via-black/16 to-black/3 absolute inset-0"></div>
         <div className="absolute left-[6%] top-1/2 z-2 max-w-95 -translate-y-1/2">
           <span
-            className={`${isVisible ? "opacity-100" : "opacity-0"} delay-100 block font-jetbrains text-[10px] text-span tracking-[.3em] transition-[opacity,transform] duration-800 ease-out`}>
+            className={`${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"} delay-100 block font-jetbrains text-[10px] text-span tracking-[.3em] transition-[opacity,transform] duration-800 ease-in-out`}>
             MANIFESTO_001
           </span>
           <div
             aria-hidden="true"
-            className={`w-10 bg-span h-px my-4 mx-0 delay-100 ${isVisible ? "opacity-100" : "opacity-0"} transition-[opacity,transform] duration-800 ease-out`}></div>
+            className={`w-10 bg-span h-px my-4 mx-0 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"} transition-[opacity, transform] duration-800 ease-in-out`}></div>
           <h2
-            className={`${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-7.5"} delay-300 transition-[opacity,transform] duration-800 ease-out font-anton uppercase m-0 text-[80px] leading-none`}>
+            className={`${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"} delay-300 transition-[opacity, transform] duration-800 ease-in-out font-anton uppercase m-0 text-[80px] leading-none`}>
             <span className="block">
               <span className="text-white block">THE</span>
             </span>
@@ -395,7 +674,7 @@ const Home = () => {
             </span>
           </h2>
           <p
-            className={`${isVisible ? "opacity-100" : "opacity-0"} transition-[opacity,transform] duration-800 ease-out delay-600 mt-8 mb-10 max-w-105 text-[13px] text-white/60 font-ibm leading-[1.8]`}>
+            className={`${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"} transition-[opacity, transform] duration-800 ease-in-out delay-600 mt-8 mb-10 max-w-105 text-[13px] text-white/60 font-ibm leading-[1.8]`}>
             We exist at the intersection of technical precision and cultural
             expression. Our garments are engineered for those navigating an
             increasingly fragmented world, built from Japanese craftsmanship,
