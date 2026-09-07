@@ -265,11 +265,31 @@ const HeroContent = ({ scrollYProgress, reducedMotion }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.2,
+      },
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="hero-content">
       <motion.div
+        ref={sectionRef}
         style={reducedMotion ? undefined : { opacity: textOpacity, y: textY }}>
-        <div className="mb-4 flex items-center gap-3">
+        <div className={`${isVisible? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-600 delay-100 ease-in-out mb-4 flex items-center gap-3`}>
           <span className="h-2 w-2 rounded-full bg-span h-anim"></span>
           <span className="block text-[11px] uppercase tracking-[0.3em] text-span font-jetbrains">
             THE_ORIGIN_DROP{" "}
@@ -278,13 +298,13 @@ const HeroContent = ({ scrollYProgress, reducedMotion }) => {
             </span>
           </span>
         </div>
-        <h1 className="hero-heading text-[80px] text-black">
+        <h1 className={`hero-heading text-[80px] text-black ${isVisible? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-300 delay-300 ease-in-out`}>
           WEAR YOUR <span>STORY</span>
         </h1>
-        <div className="hero-buttons mt-8">
+        <div className={`hero-buttons mt-8 ${isVisible? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-600 delay-500 ease-in-out`}>
           <Link
             to={"/drop"}
-            class="inline-block w-auto rounded-none bg-span px-8 py-4 text-base uppercase text-white transition-all duration-300 hover:bg-white hover:text-black hover:scale-[1.05] font-anton cursor-none"
+            class="inline-block w-auto rounded-none bg-span px-8 py-4 text-base uppercase text-white transition-all duration-600 hover:bg-white hover:text-black hover:scale-[1.05] font-anton cursor-none"
             tabIndex="0">
             SHOP THE DROP →
           </Link>
