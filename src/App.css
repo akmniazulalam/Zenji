@@ -237,3 +237,7 @@ html {
     height: min(680px, 68vh);
   }
 }
+html,
+body {
+  overflow-x: clip;
+}

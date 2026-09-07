@@ -74,7 +74,7 @@ const Header = () => {
       </div>
       <nav
         ref={headerRef}
-        className={`sticky top-0 z-40 w-full ${isMobile ? "bg-black/95 [backdrop-filter:blur(20px)]" : ""} ${!isHomePage ? "bg-[#000000f2] [backdrop-filter:blur(10px)]" : ""} transition-all duration-300 ease-in-out`}>
+        className={`sticky top-0 z-40 w-full ${isMobile ? "bg-black/95" : ""} ${!isHomePage ? "bg-[#000000f2]" : ""} transition-all duration-300 ease-in-out`}>
         <div className="mx-auto flex w-full max-w-container-max items-center justify-between px-margin-mobile py-4 md:px-margin-desktop">
           <Link
             to={"/"}
@@ -168,49 +168,51 @@ const Header = () => {
             </Link>
             <button
               aria-label="Open cart"
-              onClick={() => setIsCartOpen(!isCartOpen)}
+              onClick={() => setIsCartOpen(true)}
               className="relative flex h-11 w-11 items-center justify-center text-white transition-colors hover:text-span hover:scale-[1.05] cursor-none">
               <GrCart className="text-2xl" />
             </button>
-            <aside
-              role="dialog"
-              aria-modal="true"
-              aria-label="Your cart"
-              ref={cartRef}
-              className={`fixed top-0 ${isCartOpen ? "right-0 opacity-100" : "-right-full opacity-0"} z-40 flex h-full w-full flex-col border-l border-white/10 bg-black md:w-105 transition-all duration-400 ease-in-out`}>
-              <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-xl uppercase tracking-widest text-white font-anton">
-                    YOUR CART
-                  </h2>
+            <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+              <aside
+                ref={cartRef}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Your cart"
+                className={`absolute inset-y-0 right-0 flex h-full w-full flex-col border-l border-white/10 bg-black transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1) md:w-105${isCartOpen ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-full opacity-0 pointer-events-none"}`}>
+                <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-xl uppercase tracking-widest text-white font-anton">
+                      YOUR CART
+                    </h2>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label="Close cart"
+                    onClick={() => setIsCartOpen(false)}
+                    className="transition-colors duration-150 hover:border-white/50 hover:text-white text-[#6b7280] disabled:opacity-30 w-10 h-10 flex items-center justify-center text-[22px] shrink-0 p-0 bg-transparent border border-white/25 cursor-none"
+                    tabIndex="0">
+                    ×
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  aria-label="Close cart"
-                  onClick={() => setIsCartOpen(false)}
-                  className="transition-colors duration-150 hover:border-white/50 hover:text-white text-[#6b7280] disabled:opacity-30 w-10 h-10 flex items-center justify-center text-[22px] shrink-0 p-0 bg-transparent border border-white/25 cursor-none"
-                  tabIndex="0">
-                  ×
-                </button>
-              </div>
-              <div
-                data-lenis-prevent="true"
-                className="scrollbar-none grow overflow-y-auto px-6 py-5">
-                <div className="flex h-full flex-col items-center justify-center text-center">
-                  <p className="text-xl uppercase tracking-widest text-white font-anton">
-                    YOUR CART IS EMPTY
-                  </p>
-                  <p className="mt-2 text-xs tracking-[0.3em] font-jetbrains text-span">
-                    THE ARC AWAITS.
-                  </p>
-                  <Link
-                    to={"/collection"}
-                    className="mt-8 inline-flex min-h-11 items-center px-6 py-3 text-sm uppercase tracking-widest text-white font-anton bg-span transition-colors hover:bg-[#930100]! cursor-none">
-                    SHOP COLLECTION →
-                  </Link>
+                <div
+                  data-lenis-prevent="true"
+                  className="scrollbar-none grow overflow-y-auto px-6 py-5">
+                  <div className="flex h-full flex-col items-center justify-center text-center">
+                    <p className="text-xl uppercase tracking-widest text-white font-anton">
+                      YOUR CART IS EMPTY
+                    </p>
+                    <p className="mt-2 text-xs tracking-[0.3em] font-jetbrains text-span">
+                      THE ARC AWAITS.
+                    </p>
+                    <Link
+                      to={"/collection"}
+                      className="mt-8 inline-flex min-h-11 items-center px-6 py-3 text-sm uppercase tracking-widest text-white font-anton bg-span transition-colors hover:bg-[#930100]! cursor-none">
+                      SHOP COLLECTION →
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </aside>
+              </aside>
+            </div>
             <Link
               to={"/login"}
               aria-label="Account"
