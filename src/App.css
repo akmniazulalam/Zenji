@@ -168,7 +168,7 @@ html{
 
 .stack-card-motion {
   position: absolute;
-  top: clamp(1.5rem, 8vh, 5rem);
+  top: clamp(6.5rem, 11vh, 5rem);
   inset-inline: 0;
   width: min(1000px, 88vw);
   margin-inline: auto;
