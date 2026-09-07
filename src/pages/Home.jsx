@@ -289,7 +289,8 @@ const HeroContent = ({ scrollYProgress, reducedMotion }) => {
       <motion.div
         ref={sectionRef}
         style={reducedMotion ? undefined : { opacity: textOpacity, y: textY }}>
-        <div className={`${isVisible? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-600 delay-100 ease-in-out mb-4 flex items-center gap-3`}>
+        <div
+          className={`${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-600 delay-100 ease-in-out mb-4 flex items-center gap-3`}>
           <span className="h-2 w-2 rounded-full bg-span h-anim"></span>
           <span className="block text-[11px] uppercase tracking-[0.3em] text-span font-jetbrains">
             THE_ORIGIN_DROP{" "}
@@ -298,10 +299,12 @@ const HeroContent = ({ scrollYProgress, reducedMotion }) => {
             </span>
           </span>
         </div>
-        <h1 className={`hero-heading text-[80px] text-black ${isVisible? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-300 delay-300 ease-in-out`}>
+        <h1
+          className={`hero-heading text-[80px] text-black ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-300 delay-300 ease-in-out`}>
           WEAR YOUR <span>STORY</span>
         </h1>
-        <div className={`hero-buttons mt-8 ${isVisible? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-600 delay-500 ease-in-out`}>
+        <div
+          className={`hero-buttons mt-8 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"} transition-all duration-600 delay-500 ease-in-out`}>
           <Link
             to={"/drop"}
             class="inline-block w-auto rounded-none bg-span px-8 py-4 text-base uppercase text-white transition-all duration-600 hover:bg-white hover:text-black hover:scale-[1.05] font-anton cursor-none"
@@ -543,10 +546,57 @@ const latestDrops = [
   },
 ];
 
+const DropRevealCard = ({ card, progress, index }) => {
+  const entryStart = 0.14 + index * 0.12;
+  const entryEnd = entryStart + 0.18;
+
+  const y = useTransform(
+    progress,
+    [entryStart, entryEnd],
+    [card.initialY, "0vh"],
+  );
+
+  const opacity = useTransform(
+    progress,
+    [entryStart, entryEnd, 0.88, 1],
+    [0.25, 0.5, 0.2, 0],
+  );
+
+  return (
+    <motion.div
+      style={{
+        x: card.x,
+        y,
+        rotate: card.rotate,
+        opacity,
+        zIndex: 20 + index,
+      }}
+      className="absolute left-1/2 top-1/2 w-70 h-95 -mt-47.5 overflow-hidden bg-black">
+      <img
+        src={card.src}
+        alt=""
+        className="h-full w-full object-cover object-[center_20%]"
+      />
+
+      <span className="pointer-events-none absolute inset-0 border border-white/15" />
+    </motion.div>
+  );
+};
+
 const Home = () => {
   const scrollRef = useRef(null);
   const sectionRef = useRef(null);
+  const dropRevealRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+
+  const { scrollYProgress: dropProgress } = useScroll({
+    target: dropRevealRef,
+    offset: ["start start", "end end"],
+  });
+
+  const theX = useTransform(dropProgress, [0.05, 0.3], ["0vw", "-94vw"]);
+
+  const originX = useTransform(dropProgress, [0.05, 0.3], ["0vw", "94vw"]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -569,9 +619,72 @@ const Home = () => {
     target: scrollRef,
     offset: ["start start", "end end"],
   });
+
+  const cards = [
+    {
+      src: "/Domain-expansion-4.avif",
+      x: "-290px",
+      rotate: -6,
+      initialY: "96vh",
+    },
+    {
+      src: "/Limitless-4.avif",
+      x: "-190px",
+      rotate: -2,
+      initialY: "96vh",
+    },
+    {
+      src: "/Paradise-spirit-4.avif",
+      x: "-90px",
+      rotate: 2,
+      initialY: "96vh",
+    },
+    {
+      src: "/Water-breathing-4.avif",
+      x: "10px",
+      rotate: 6,
+      initialY: "96vh",
+    },
+  ];
+
   return (
     <>
       <HeroSection />
+      <section
+        ref={dropRevealRef}
+        id="drop-reveal"
+        className="relative h-[400vh] bg-black">
+        <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
+          {/* IMAGE CARDS */}
+          <div className="absolute inset-0 z-20 scale-[0.55] sm:scale-75 lg:scale-100">
+            {cards.map((card, index) => (
+              <DropRevealCard
+                key={card.src}
+                card={card}
+                progress={dropProgress}
+                index={index}
+              />
+            ))}
+          </div>
+
+          {/* THE ORIGIN */}
+          <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center font-anton gap-[0.22em]">
+            <motion.span className="revealText" style={{ x: theX }}>
+              THE
+            </motion.span>
+
+            <motion.span className="revealText" style={{ x: originX }}>
+              ORIGIN
+            </motion.span>
+          </div>
+
+          {/* COLLECTION LABEL */}
+          <span className="absolute left-[6vw] top-[12vh] z-40 text-[10px] uppercase tracking-[0.3em] font-jetbrains text-[#FF3B30]">
+            COLLECTION{" "}
+            <span className="text-[#999999]">// THE_ORIGIN_DROP</span>
+          </span>
+        </div>
+      </section>
       <section>
         <div className="px-6 py-12 flex items-end justify-between gap-6">
           <div className="">
